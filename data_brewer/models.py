@@ -18,14 +18,28 @@ class DataStream(models.Model):
 
 SAMPLE_STATUS = (
     ('NEW', _('New sample')),
-    ('OBSOLETE', _('Obsolete sample')),
+    ('EXPIRED', _('Expired sample')),
 )
 
 
-class DataSample(models.Model):
-    metadata = jsonfield.JSONField(_('Sample metadata'))
-    sample_date = models.DateTimeField(_('Sample sampling date'), null=False)
+class Sample(models.Model):
+    sampling_date = models.DateTimeField(_('Sample sampling date'), null=False)
     record_date = models.DateTimeField(_('Sample record date'), null=False, auto_now_add=True, editable=False)
-    value = models.CharField(_('Sample value'), max_length=100)
+    mean_value = models.DecimalField(_('Sample mean value'), max_digits=21, decimal_places=9)
+    min_value = models.DecimalField(_('Sample min value'), max_digits=21, decimal_places=9)
+    max_value = models.DecimalField(_('Sample max value'), max_digits=21, decimal_places=9)
+    sample_size = models.IntegerField(_('Sample size'), default=1)
+    metadata = jsonfield.JSONField(_('Sample metadata'))
+    status = models.CharField(max_length=10, choices=SAMPLE_STATUS, default='NEW')
     data_stream = models.ForeignKey(DataStream)
-    status = models.CharField(max_length=10, choices=SAMPLE_STATUS)
+
+    @property
+    def value(self):
+        return self.mean_value
+
+    @value.setter
+    def value(self, v):
+        self.mean_value = v
+        self.min_value = v
+        self.max_value = v
+        self.sample_size = 1
