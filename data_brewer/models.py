@@ -4,15 +4,15 @@ import jsonfield
 
 
 class DataSource(models.Model):
-    name = models.CharField(_('Data source name'),  max_length=40)
-    description = models.CharField(_('Data source description'), max_length=1000, null=True, blank=True)
-    metadata = jsonfield.JSONField(_('Data source meta-data'))
+    name = models.CharField(_('Name'),  max_length=40)
+    description = models.CharField(_('Description'), max_length=1000, null=True, blank=True)
+    metadata = jsonfield.JSONField(_('Metadata'))
 
 
 class DataStream(models.Model):
-    name = models.CharField(_('Stream name'),  max_length=40)
-    description = models.CharField(_('Stream description'), max_length=1000, null=True, blank=True)
-    metadata = jsonfield.JSONField(_('Stream meta-data'))
+    name = models.CharField(_('Name'),  max_length=40)
+    description = models.CharField(_('Description'), max_length=1000, null=True, blank=True)
+    metadata = jsonfield.JSONField(_('Metadata'))
     data_source = models.ForeignKey(DataSource)
 
 
@@ -23,13 +23,13 @@ SAMPLE_STATUS = (
 
 
 class Sample(models.Model):
-    sampling_date = models.DateTimeField(_('Sample sampling date'), null=False)
-    record_date = models.DateTimeField(_('Sample record date'), null=False, auto_now_add=True, editable=False)
-    mean_value = models.DecimalField(_('Sample mean value'), max_digits=21, decimal_places=9)
-    min_value = models.DecimalField(_('Sample min value'), max_digits=21, decimal_places=9)
-    max_value = models.DecimalField(_('Sample max value'), max_digits=21, decimal_places=9)
+    sampling_date = models.DateTimeField(_('Sampling date'), null=False)
+    record_date = models.DateTimeField(_('Record date'), null=False, auto_now_add=True, editable=False)
+    mean_value = models.DecimalField(_('Mean value'), max_digits=21, decimal_places=9)
+    min_value = models.DecimalField(_('Min value'), max_digits=21, decimal_places=9)
+    max_value = models.DecimalField(_('Max value'), max_digits=21, decimal_places=9)
     sample_size = models.IntegerField(_('Sample size'), default=1)
-    metadata = jsonfield.JSONField(_('Sample metadata'))
+    metadata = jsonfield.JSONField(_('Metadata'))
     status = models.CharField(max_length=10, choices=SAMPLE_STATUS, default='NEW')
     data_stream = models.ForeignKey(DataStream)
 
